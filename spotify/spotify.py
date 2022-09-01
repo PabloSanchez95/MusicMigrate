@@ -9,9 +9,12 @@ def get_spotipy_client():
     load_dotenv()
     client_id = os.getenv("SPOTIPY_CLIENT_ID")
     client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+    scope = "user-library-read"
 
     return spotipy.Spotify(
-        auth_manager=SpotifyOAuth(client_id=client_id, client_secret=client_secret)
+        auth_manager=SpotifyOAuth(
+            client_id=client_id, client_secret=client_secret, scope=scope
+        )
     )
 
 
@@ -23,7 +26,7 @@ def filter_song_list(library_items: dict) -> list:
         song_list.append(
             dict(
                 title=song_info["name"],
-                artist=", ".join([artist["name"] for artist in song_info["artists"]]),
+                artists=[artist["name"] for artist in song_info["artists"]],
                 album=song_info["album"]["name"],
             )
         )
@@ -31,6 +34,7 @@ def filter_song_list(library_items: dict) -> list:
 
 
 def get_spotify_complete_library() -> list:
+    print("\033[1;36mGetting Spotify library \033[0m")
     spotipy = get_spotipy_client()
 
     offset = 0

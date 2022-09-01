@@ -1,0 +1,46 @@
+.vscode
+*.DS_Store
+
+# Template .gitignore for python
+__pycache__/
+*.py[cod]
+*$py.class
+# C extensions
+*.so
+# Distribution / packaging
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+# Unit test / coverage reports
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+junit.xml
+# pyenv
+.python-version
+# Environments
+.env
+.env.backup
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.idea
+.mypy_cache/
+
+# Project data
+tracklist.json
+not_found.json
+headers_auth.json

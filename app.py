@@ -14,18 +14,21 @@ def spotify_to_youtube_music():
     clean_ytmusic_library()
 
     not_found = []
-    add_tokens = []
+    print("\033[1;36mMigrating songs \033[0m")
     for track in track_list:
-        song_tokens = search_song(track["title"], track["artist"], track["album"])
-        if not song_tokens or not song_tokens.get("add"):
+        song = search_song(track["title"], track["artists"], track["album"])
+
+        if not song or not song.get("tokens"):
+            print(
+                f'\033[1;36m{track["title"]}, {track["artists"][0]}, {track["album"]} not found \033[0m'
+            )
             not_found.append(track)
             continue
-        print(track["title"], track["artist"], track["album"])
-        add_tokens.append(song_tokens["add"])
+
+        print(f'{song["title"]}, {song["artists"][0]}, {song["album"]}')
+        add_songs_to_library(song.get("tokens", {}).get("add"))
 
     dump(not_found, open("youtube_music/not_found.json", "w"))
-
-    add_songs_to_library(add_tokens)
 
 
 if __name__ == "__main__":

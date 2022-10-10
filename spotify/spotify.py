@@ -22,12 +22,12 @@ def filter_song_list(library_items: dict) -> list:
     song_list = []
     for song in library_items:
         song_info = song["track"]
-
         song_list.append(
             dict(
                 title=song_info["name"],
                 artists=[artist["name"] for artist in song_info["artists"]],
                 album=song_info["album"]["name"],
+                duration=round(song_info["duration_ms"] / 1000),
             )
         )
     return song_list

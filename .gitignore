@@ -42,5 +42,6 @@ venv.bak/
 
 # Project data
 tracklist.json
-not_found.json
+playlists.json
+*not_found.json
 headers_auth.json

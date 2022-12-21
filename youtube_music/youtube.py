@@ -1,5 +1,4 @@
 from difflib import SequenceMatcher
-
 from re import compile, sub
 from typing import List, Optional
 
@@ -12,9 +11,16 @@ def get_string_similarity(a: str, b: str) -> float:
     return SequenceMatcher(a=a, b=b).ratio()
 
 
+def delete_ytmusic_paylists():
+    print("\033[1;36mDeleting all playlists \033[0m")
+    playlists = ytmusic.get_library_playlists(50)  # TODO: Make this dynamic
+    for playlist in playlists:
+        ytmusic.delete_playlist(playlist.get("playlistId"))
+        print(f"\033[1;36m{playlist.get('title')} deleted\033[0m")
+
+
 def clean_ytmusic_library():
     print("\033[1;36mCleaning existing library \033[0m")
-    ytmusic = YTMusic("youtube_music/headers_auth.json")
     library = ytmusic.get_library_songs(limit=3000)  # TODO: Make this dynamic
     remove_tokens = [song.get("feedbackTokens", []).get("remove") for song in library]
     song_titles = [song.get("title", "") for song in library]
@@ -138,9 +144,6 @@ def get_matching_song(
 def clean_title(title: str) -> str:
     title = title.lower()
 
-    # possible_artists = search("([\(\[]).*(feat|ft).*?([\)\]])", title)
-    # possible_artists = sub("(ft.|feat.|featuring|&)", "", possible_artists)
-
     title = sub(";[^;\r\n]+(?=(original|remaster|bonus|feat|with\s)).*", "", title)
     title = sub(
         ".([\[\(])[^\)\]]+(?=(riginal|emaster|onus|eat\.|ith\s|ingle|rom\s)).*?([\)\]])",
@@ -205,6 +208,7 @@ def search_song(
                     ),
                     tokens=song_data.get("feedbackTokens", {}),
                     duration=song_data["duration_seconds"],
+                    videoId=song_data["videoId"],
                 )
             )
         except AttributeError:
@@ -227,3 +231,11 @@ def add_songs_to_library(token: str):
     while not is_processed:
         add_response = ytmusic.edit_song_library_status(feedbackTokens=token)
         is_processed = add_response["feedbackResponses"][0]["isProcessed"]
+
+
+def add_songs_to_playlist(playlist_id: str, videoId: str):
+    ytmusic.add_playlist_items(playlist_id, [videoId])
+
+
+def create_yt_playlist(name: str, description: str):
+    return ytmusic.create_playlist(name, description)
